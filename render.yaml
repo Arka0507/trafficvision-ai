@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: trafficvision-ai
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: MAX_UPLOAD_MB
+        value: "2048"
+      - key: MAX_PROCESSING_WORKERS
+        value: "1"
