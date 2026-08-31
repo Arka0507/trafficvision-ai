@@ -1,14 +1,23 @@
 # TrafficVision AI
 
 [![CI](https://github.com/Arka0507/trafficvision-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Arka0507/trafficvision-ai/actions)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Arka0507/trafficvision-ai/blob/main/TrafficVision_AI_Colab.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10-3.12](https://img.shields.io/badge/Python-3.10%20--%203.12-brightgreen.svg)](https://python.org)
 
-TrafficVision AI is an end-to-end local video analytics application built with **YOLOv8n**, **ByteTrack**, **OpenCV**, **FastAPI**, and an optional **EfficientNet-B3 vehicle make/model classifier**. Upload a video in the browser and receive an annotated H.264 video plus track-level and frame-level reports.
+TrafficVision AI is an end-to-end video analytics application built with **YOLOv8n**, **ByteTrack**, **OpenCV**, **FastAPI**, and an optional **EfficientNet-B3 vehicle make/model classifier**. Upload a video in the browser and receive an annotated H.264 video plus track-level and frame-level reports.
 
 ![TrafficVision AI interface](frontend/assets/og.png)
 
-## 🚀 Run Instantly in 1 Command (For Anyone)
+## ⚡ 1-Click Cloud Run Directly From GitHub
+
+Click the button below to run TrafficVision AI **live in your browser with Free NVIDIA GPU acceleration**:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Arka0507/trafficvision-ai/blob/main/TrafficVision_AI_Colab.ipynb)
+
+---
+
+## 🚀 Run Locally in 1 Command (For Anyone)
 
 Anyone can clone and run this repository in a single command:
 
