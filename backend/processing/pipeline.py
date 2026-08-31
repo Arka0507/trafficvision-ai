@@ -10,6 +10,7 @@ from collections import Counter, deque
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import cv2
 import numpy as np
@@ -17,7 +18,11 @@ import numpy as np
 from backend.config import TRACKER_CONFIG
 from backend.exceptions import ProcessingCancelled
 from backend.schemas import ProcessingOptions
-from ultralytics import YOLO
+
+if TYPE_CHECKING:
+    from ultralytics import YOLO
+else:
+    YOLO = Any
 
 from .drawing import class_color, draw_footer, draw_hud, draw_label, draw_trail
 from .geometry import DistanceSpeedEstimator, MotionReading
@@ -115,6 +120,8 @@ class VideoProcessor:
             torch.set_num_threads(os.cpu_count())
 
         callback(0.5, "Loading detector", "Loading lightweight YOLO weights", {})
+        from ultralytics import YOLO
+
         self.detector = YOLO(self.options.detector_model)
         if self.options.enable_vehicle_classifier:
             callback(
