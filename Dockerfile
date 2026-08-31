@@ -17,6 +17,7 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 RUN mkdir -p /app/data/jobs
+RUN python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
 
 EXPOSE 8000
 VOLUME ["/app/data"]
