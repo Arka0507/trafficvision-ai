@@ -13,11 +13,11 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from ultralytics import YOLO
 
 from backend.config import TRACKER_CONFIG
 from backend.exceptions import ProcessingCancelled
 from backend.schemas import ProcessingOptions
+from ultralytics import YOLO
 
 from .drawing import class_color, draw_footer, draw_hud, draw_label, draw_trail
 from .geometry import DistanceSpeedEstimator, MotionReading
@@ -109,6 +109,7 @@ class VideoProcessor:
 
     def _load_models(self, callback: ProgressCallback) -> None:
         import os
+
         import torch
         if os.cpu_count() and torch.get_num_threads() < os.cpu_count():
             torch.set_num_threads(os.cpu_count())
@@ -136,8 +137,9 @@ class VideoProcessor:
         if not ffmpeg:
             try:
                 import imageio_ffmpeg
+
                 ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
-            except Exception:
+            except Exception:  # noqa: BLE001
                 ffmpeg = None
 
         if not ffmpeg:
