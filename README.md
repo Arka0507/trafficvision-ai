@@ -1,8 +1,31 @@
 # TrafficVision AI
 
+[![CI](https://github.com/Arka0507/trafficvision-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Arka0507/trafficvision-ai/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10-3.12](https://img.shields.io/badge/Python-3.10%20--%203.12-brightgreen.svg)](https://python.org)
+
 TrafficVision AI is an end-to-end local video analytics application built with **YOLOv8n**, **ByteTrack**, **OpenCV**, **FastAPI**, and an optional **EfficientNet-B3 vehicle make/model classifier**. Upload a video in the browser and receive an annotated H.264 video plus track-level and frame-level reports.
 
 ![TrafficVision AI interface](frontend/assets/og.png)
+
+## 🚀 Run Instantly in 1 Command (For Anyone)
+
+Anyone can clone and run this repository in a single command:
+
+### Windows:
+```cmd
+git clone https://github.com/Arka0507/trafficvision-ai.git && cd trafficvision-ai && .\setup_windows.bat && .\start_windows.bat
+```
+
+### Linux / macOS:
+```bash
+git clone https://github.com/Arka0507/trafficvision-ai.git && cd trafficvision-ai && chmod +x setup_unix.sh start_unix.sh && ./setup_unix.sh && ./start_unix.sh
+```
+
+### Docker (Zero Setup Required):
+```bash
+git clone https://github.com/Arka0507/trafficvision-ai.git && cd trafficvision-ai && docker compose up --build
+```
 
 ## What the project does
 
