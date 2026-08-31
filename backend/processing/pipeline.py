@@ -291,16 +291,24 @@ class VideoProcessor:
                 processing_fps = frame_index / elapsed
 
                 yolo_device = None if self.options.device == "auto" else self.options.device
-                results = self.detector.track(
-                    frame,
-                    persist=True,
-                    tracker=str(TRACKER_CONFIG),
-                    conf=self.options.confidence,
-                    iou=self.options.iou,
-                    imgsz=self.options.image_size,
-                    device=yolo_device,
-                    verbose=False,
-                )
+                import gc
+
+                import torch
+
+                if frame_index % 100 == 0:
+                    gc.collect()
+
+                with torch.inference_mode():
+                    results = self.detector.track(
+                        frame,
+                        persist=True,
+                        tracker=str(TRACKER_CONFIG),
+                        conf=self.options.confidence,
+                        iou=self.options.iou,
+                        imgsz=self.options.image_size,
+                        device=yolo_device,
+                        verbose=False,
+                    )
                 result = results[0]
                 detections: list[dict] = []
                 boxes = result.boxes

@@ -205,7 +205,7 @@ async function pollJob() {
     if (job.status === 'cancelled') { failJob('Analysis cancelled', job.message); return; }
     state.pollTimer = setTimeout(pollJob, 1000);
   } catch (error) {
-    setProgress(state.job.progress || 0, 'Reconnecting', 'Waiting for the local processing engine');
+    setProgress(state.job?.progress || 0, 'Processing video', 'Analyzing video frames in background…');
     state.pollTimer = setTimeout(pollJob, 2500);
   }
 }
