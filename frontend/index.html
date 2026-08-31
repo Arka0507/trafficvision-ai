@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07101d" />
+    <meta
+      name="description"
+      content="Local video intelligence with YOLOv8n, ByteTrack, vehicle recognition, distance and speed estimation."
+    />
+    <meta property="og:title" content="TrafficVision AI" />
+    <meta
+      property="og:description"
+      content="Detect, track and measure every supported object in traffic video."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/og.png" />
+    <title>TrafficVision AI — Video Object Analytics</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#workspace" aria-label="TrafficVision AI home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" role="img">
+            <path d="M5 10.5 18 3l13 7.5v15L18 33 5 25.5z" />
+            <path d="M11 14.5 18 10l7 4.5v7L18 26l-7-4.5z" />
+            <circle cx="18" cy="18" r="3" />
+          </svg>
+        </span>
+        <span>
+          <strong>TrafficVision</strong>
+          <small>VIDEO INTELLIGENCE</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <a href="/docs" target="_blank" rel="noreferrer" class="text-link">API Docs</a>
+        <span class="system-pill" id="systemPill">
+          <span class="status-dot"></span>
+          <span id="systemText">Checking engine</span>
+        </span>
+      </div>
+    </header>
+
+    <main id="workspace" class="page-shell">
+      <section class="intro-row" aria-labelledby="pageTitle">
+        <div>
+          <span class="eyebrow">LOCAL-FIRST COMPUTER VISION</span>
+          <h1 id="pageTitle">Turn traffic footage into tracked intelligence.</h1>
+          <p>
+            Upload a video to detect supported objects, keep a stable ID with ByteTrack,
+            recognize car make/model, and estimate distance and camera-relative speed frame by frame.
+          </p>
+        </div>
+        <div class="model-stack" aria-label="Models used">
+          <span>YOLOv8n</span><i></i><span>ByteTrack</span><i></i><span>OpenCV</span>
+        </div>
+      </section>
+
+      <section class="workspace-grid">
+        <div class="main-column">
+          <article class="panel upload-panel" id="uploadPanel">
+            <div class="panel-heading">
+              <div>
+                <span class="step-number">01</span>
+                <div>
+                  <h2>Choose traffic footage</h2>
+                  <p>MP4, MOV, AVI, MKV or WebM · up to 2 GB</p>
+                </div>
+              </div>
+              <span class="privacy-chip">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.9 8.8 7 10 4.1-1.2 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                Runs on your machine
+              </span>
+            </div>
+
+            <input id="videoInput" type="file" accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm" hidden />
+            <button class="dropzone" id="dropzone" type="button">
+              <span class="upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 28 28"><path d="M14 19V5m0 0-5 5m5-5 5 5"/><path d="M5 17v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg>
+              </span>
+              <strong>Drop your video here</strong>
+              <span>or click to browse from your computer</span>
+              <em>All 80 COCO object classes are enabled</em>
+            </button>
+
+            <div class="file-preview hidden" id="filePreview">
+              <video id="inputPreview" muted playsinline preload="metadata"></video>
+              <div class="file-info">
+                <span class="selected-label">SELECTED VIDEO</span>
+                <h3 id="fileName">video.mp4</h3>
+                <p id="fileMeta">Reading video metadata…</p>
+                <button class="quiet-button" id="replaceFile" type="button">Replace video</button>
+              </div>
+              <span class="file-check" aria-label="Ready">✓</span>
+            </div>
+          </article>
+
+          <article class="panel progress-panel hidden" id="progressPanel" aria-live="polite">
+            <div class="progress-topline">
+              <div>
+                <span class="step-number active">02</span>
+                <div>
+                  <h2 id="progressPhase">Uploading video</h2>
+                  <p id="progressMessage">Preparing your file</p>
+                </div>
+              </div>
+              <strong id="progressPercent">0%</strong>
+            </div>
+            <div class="progress-track"><span id="progressBar"></span></div>
+            <div class="live-metrics">
+              <div><span>Frames</span><strong id="liveFrames">—</strong></div>
+              <div><span>Tracks</span><strong id="liveTracks">—</strong></div>
+              <div><span>Vehicles</span><strong id="liveVehicles">—</strong></div>
+              <div><span>Processing</span><strong id="liveFps">—</strong></div>
+            </div>
+            <button type="button" class="quiet-button danger" id="cancelButton">Cancel processing</button>
+          </article>
+
+          <article class="panel result-panel hidden" id="resultPanel">
+            <div class="result-heading">
+              <div>
+                <span class="success-icon">✓</span>
+                <div>
+                  <span class="eyebrow success">ANALYSIS COMPLETE</span>
+                  <h2>Your annotated video is ready.</h2>
+                </div>
+              </div>
+              <button class="primary-button compact" id="newAnalysis" type="button">New analysis</button>
+            </div>
+
+            <div class="video-stage">
+              <video id="resultVideo" controls playsinline preload="auto"></video>
+              <span class="video-badge">ANNOTATED OUTPUT</span>
+            </div>
+
+            <div class="result-actions">
+              <a class="primary-button" id="downloadVideo" href="#" download>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>
+                Download Analyzed MP4 Video
+              </a>
+              <a class="secondary-button" id="downloadTracks" href="#" download>Track report CSV</a>
+              <a class="secondary-button" id="downloadDetections" href="#" download>Frame data CSV</a>
+              <a class="secondary-button" id="downloadSummary" href="#" download>Summary JSON</a>
+            </div>
+
+            <div class="result-stats" id="resultStats"></div>
+
+            <div class="analysis-grid">
+              <section class="data-card">
+                <div class="data-card-title">
+                  <div><span class="eyebrow">OBJECT MIX</span><h3>Unique tracked objects</h3></div>
+                </div>
+                <div class="class-bars" id="classBars"></div>
+              </section>
+              <section class="data-card measurement-card">
+                <span class="eyebrow">MEASUREMENT MODE</span>
+                <h3 id="measurementMode">Monocular estimate</h3>
+                <p id="measurementCopy">
+                  Distance uses field-of-view and typical object dimensions. Speed is relative to the fixed camera.
+                </p>
+                <span class="accuracy-note">Calibrate before using values for enforcement or safety decisions.</span>
+              </section>
+            </div>
+
+            <section class="track-table-wrap">
+              <div class="table-heading">
+                <div><span class="eyebrow">TRACK REGISTER</span><h3>Objects with the longest visibility</h3></div>
+                <span id="tableCount">Showing 0 tracks</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th>ID</th><th>Object</th><th>Car make / model</th><th>Visible</th><th>Nearest</th><th>Avg. speed</th></tr></thead>
+                  <tbody id="trackTable"></tbody>
+                </table>
+              </div>
+            </section>
+          </article>
+        </div>
+
+        <aside class="settings-column">
+          <article class="panel settings-panel">
+            <div class="settings-heading">
+              <div>
+                <span class="step-number">02</span>
+                <div><h2>Analysis controls</h2><p>Tune accuracy and measurement</p></div>
+              </div>
+              <button type="button" class="reset-button" id="resetSettings">Reset</button>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-title"><span>Detection</span><small>YOLOv8n</small></div>
+              <label class="range-setting">
+                <span><b>Confidence threshold</b><output id="confidenceValue">0.05</output></span>
+                <input id="confidence" type="range" min="0.01" max="0.95" step="0.01" value="0.05" />
+              </label>
+              <label class="range-setting">
+                <span><b>Overlap threshold (IoU)</b><output id="iouValue">0.45</output></span>
+                <input id="iou" type="range" min="0.10" max="0.80" step="0.05" value="0.45" />
+              </label>
+              <label class="select-setting">
+                <span><b>Inference resolution</b><small>Higher detects tiny/distant objects</small></span>
+                <select id="imageSize"><option value="640">640 px · Standard</option><option value="960" selected>960 px · High Detail</option><option value="1280">1280 px · Maximum Precision</option></select>
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-title"><span>Vehicle intelligence</span><small>Fine-grained</small></div>
+              <label class="toggle-setting">
+                <span><b>Car make / model</b><small>Runs on sufficiently large car crops</small></span>
+                <input id="vehicleClassifier" type="checkbox" checked /><i></i>
+              </label>
+              <label class="range-setting" id="vehicleConfidenceRow">
+                <span><b>Model certainty</b><output id="vehicleConfidenceValue">0.55</output></span>
+                <input id="vehicleConfidence" type="range" min="0.10" max="0.90" step="0.05" value="0.55" />
+              </label>
+              <label class="toggle-setting">
+                <span><b>Object trails</b><small>Draw recent path for each track</small></span>
+                <input id="drawTrails" type="checkbox" checked /><i></i>
+              </label>
+              <label class="toggle-setting">
+                <span><b>Frame-level CSV</b><small>Keep every detection event</small></span>
+                <input id="saveDetections" type="checkbox" checked /><i></i>
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-title"><span>Distance & speed</span><small>Estimated</small></div>
+              <label class="range-setting">
+                <span><b>Camera horizontal FOV</b><output id="fovValue">70°</output></span>
+                <input id="fov" type="range" min="30" max="120" step="1" value="70" />
+              </label>
+              <div class="number-pair">
+                <label><span>Distance scale</span><input id="distanceScale" type="number" min="0.1" max="10" step="0.05" value="1.00" /></label>
+                <label><span>Speed scale</span><input id="speedScale" type="number" min="0.1" max="10" step="0.05" value="1.00" /></label>
+              </div>
+              <details class="advanced-calibration" id="advancedCalibration">
+                <summary>Road-plane calibration <span>Advanced</span></summary>
+                <p>Map four image pixels to four measured ground coordinates in metres for better speed.</p>
+                <label><span>Image points (pixels)</span><textarea id="imagePoints" rows="3" spellcheck="false">[[420,900],[1500,900],[1080,510],[840,510]]</textarea></label>
+                <label><span>Ground points (metres)</span><textarea id="worldPoints" rows="3" spellcheck="false">[[-6,0],[6,0],[3,45],[-3,45]]</textarea></label>
+                <label class="toggle-setting compact-toggle">
+                  <span><b>Use road-plane map</b><small>Only after measuring the scene</small></span>
+                  <input id="useHomography" type="checkbox" /><i></i>
+                </label>
+              </details>
+            </div>
+
+            <button class="primary-button run-button" id="runButton" type="button" disabled>
+              <span>Analyze video</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <p class="run-hint" id="runHint">Select a video to begin</p>
+          </article>
+
+          <article class="truth-card">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.01"/></svg>
+            <div>
+              <strong>Know the limits</strong>
+              <p>YOLO detects its trained 80 classes—not every possible real-world object. Car-model predictions abstain when confidence is low.</p>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="recent-section hidden" id="recentSection">
+        <div class="section-heading"><div><span class="eyebrow">LOCAL HISTORY</span><h2>Recent analyses</h2></div></div>
+        <div class="recent-grid" id="recentGrid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span>TrafficVision AI · Local video analytics</span>
+      <span>YOLOv8n + ByteTrack + OpenCV + FastAPI</span>
+    </footer>
+
+    <div class="toast hidden" id="toast" role="alert"><strong id="toastTitle">Something went wrong</strong><span id="toastMessage"></span></div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

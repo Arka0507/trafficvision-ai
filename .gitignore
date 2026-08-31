@@ -1,0 +1,28 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.idea/
+.vscode/
+.env
+.DS_Store
+Thumbs.db
+
+# Downloaded model weights and generated analytics
+*.pt
+*.onnx
+*.engine
+data/jobs/*
+!data/jobs/.gitkeep
+data/.ultralytics/
+outputs/
+
+# Uploaded media
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.m4v

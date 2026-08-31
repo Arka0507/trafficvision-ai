@@ -1,0 +1,10 @@
+# Ultralytics ByteTrack settings tuned for maximum object recall and zero missed objects.
+tracker_type: bytetrack
+track_high_thresh: 0.05
+track_low_thresh: 0.01
+new_track_thresh: 0.05
+track_buffer: 180
+match_thresh: 0.75
+fuse_score: True
+
+

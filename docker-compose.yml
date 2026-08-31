@@ -1,0 +1,16 @@
+services:
+  trafficvision:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - trafficvision-data:/app/data
+      - model-cache:/root/.cache
+    environment:
+      MAX_UPLOAD_MB: "2048"
+      MAX_PROCESSING_WORKERS: "1"
+    restart: unless-stopped
+
+volumes:
+  trafficvision-data:
+  model-cache:

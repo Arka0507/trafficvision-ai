@@ -1,0 +1,19 @@
+{
+  "settings_version": "0.0.8",
+  "datasets_dir": "D:\\Home Work\\trafficvision-ai\\datasets",
+  "weights_dir": "weights",
+  "runs_dir": "runs",
+  "uuid": "e2341eeb1a5527ebd018b105a4dc3f6d60dc96a560c321e048197f830fa252a3",
+  "sync": true,
+  "api_key": "",
+  "openai_api_key": "",
+  "clearml": true,
+  "comet": true,
+  "dvc": true,
+  "mlflow": true,
+  "raytune": true,
+  "tensorboard": false,
+  "wandb": false,
+  "vscode_msg": true,
+  "openvino_msg": true
+}
